@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Expense Tracker</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+
+        <!-- Header -->
+
+        <header>
+
+            <h1>💰 Expense Tracker</h1>
+
+            <p>
+                Track and manage your daily expenses
+            </p>
+
+        </header>
+
+
+        <!-- Dashboard -->
+
+        <section class="dashboard-summary">
+
+            <div class="summary-card">
+
+                <span>Total Expenses</span>
+
+                <strong>
+                    ₹{{ total_expenses }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>Categories</span>
+
+                <strong>
+                    {{ category_totals|length }}
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- Category Breakdown -->
+
+        <section class="card">
+
+            <h2>
+                📊 Spending by Category
+            </h2>
+
+
+            {% if category_totals %}
+
+                <div class="category-list">
+
+                    {% for category in category_totals %}
+
+                        <div class="category-row">
+
+                            <span>
+                                {{ category[0] }}
+                            </span>
+
+                            <strong>
+                                ₹{{ category[1] }}
+                            </strong>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p>
+                    No expense data available.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Filter Expenses -->
+
+        <section class="card filter-card">
+
+            <h2>
+                🔎 Filter Expenses
+            </h2>
+
+
+            <form method="GET" action="/">
+
+
+                <div class="filter-fields">
+
+
+                    <div>
+
+                        <label for="from_date">
+                            From
+                        </label>
+
+                        <input
+                            type="date"
+                            id="from_date"
+                            name="from_date"
+                            value="{{ from_date }}"
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="to_date">
+                            To
+                        </label>
+
+                        <input
+                            type="date"
+                            id="to_date"
+                            name="to_date"
+                            value="{{ to_date }}"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <label for="category_filter">
+                    Category
+                </label>
+
+                <select
+                    id="category_filter"
+                    name="category_filter"
+                >
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    <option
+                        value="Food"
+                        {% if category_filter == "Food" %}selected{% endif %}
+                    >
+                        Food
+                    </option>
+
+                    <option
+                        value="Transport"
+                        {% if category_filter == "Transport" %}selected{% endif %}
+                    >
+                        Transport
+                    </option>
+
+                    <option
+                        value="Shopping"
+                        {% if category_filter == "Shopping" %}selected{% endif %}
+                    >
+                        Shopping
+                    </option>
+
+                    <option
+                        value="Entertainment"
+                        {% if category_filter == "Entertainment" %}selected{% endif %}
+                    >
+                        Entertainment
+                    </option>
+
+                    <option
+                        value="Health"
+                        {% if category_filter == "Health" %}selected{% endif %}
+                    >
+                        Health
+                    </option>
+
+                    <option
+                        value="Education"
+                        {% if category_filter == "Education" %}selected{% endif %}
+                    >
+                        Education
+                    </option>
+
+                    <option
+                        value="Travel"
+                        {% if category_filter == "Travel" %}selected{% endif %}
+                    >
+                        Travel
+                    </option>
+
+                    <option
+                        value="Utilities"
+                        {% if category_filter == "Utilities" %}selected{% endif %}
+                    >
+                        Utilities
+                    </option>
+
+                    <option
+                        value="Bills"
+                        {% if category_filter == "Bills" %}selected{% endif %}
+                    >
+                        Bills
+                    </option>
+
+                    <option
+                        value="Other"
+                        {% if category_filter == "Other" %}selected{% endif %}
+                    >
+                        Other
+                    </option>
+
+                </select>
+
+
+                <br>
+
+
+                <button type="submit">
+                    Apply Filter
+                </button>
+
+
+                <a href="/" class="clear-button">
+                    Clear
+                </a>
+
+
+            </form>
+
+        </section>
+
+
+        <!-- Main Content -->
+
+        <main class="dashboard">
+
+
+            <!-- Add Expense -->
+
+            <section class="card">
+
+                <h2>
+                    ➕ Add Expense
+                </h2>
+
+
+                <form method="POST">
+
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        placeholder="Example: Lunch"
+                        required
+                    >
+
+
+                    <label for="amount">
+                        Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        placeholder="Example: 250"
+                        min="0.01"
+                        max="100000000"
+                        step="0.01"
+                        required
+                    >
+
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                    >
+
+                        <option value="Food">
+                            Food
+                        </option>
+
+                        <option value="Transport">
+                            Transport
+                        </option>
+
+                        <option value="Shopping">
+                            Shopping
+                        </option>
+
+                        <option value="Entertainment">
+                            Entertainment
+                        </option>
+
+                        <option value="Health">
+                            Health
+                        </option>
+
+                        <option value="Education">
+                            Education
+                        </option>
+
+                        <option value="Travel">
+                            Travel
+                        </option>
+
+                        <option value="Utilities">
+                            Utilities
+                        </option>
+
+                        <option value="Bills">
+                            Bills
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <label for="expense_date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="expense_date"
+                        name="expense_date"
+                        required
+                    >
+
+
+                    <button type="submit">
+                        Add Expense
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <!-- Recent Expenses -->
+
+            <section class="card">
+
+                <h2>
+                    📋 Recent Expenses
+                </h2>
+
+
+                {% if expenses %}
+
+                    {% for expense in expenses %}
+
+                        <div class="expense">
+
+
+                            <div class="expense-info">
+
+                                <strong>
+                                    {{ expense[1] }}
+                                </strong>
+
+                                <span>
+                                    {{ expense[3] }}
+                                </span>
+
+                                <span>
+                                    📅 {{ expense[4] }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="expense-actions">
+
+                                <strong>
+                                    ₹{{ expense[2] }}
+                                </strong>
+
+
+                                <a href="/edit/{{ expense[0] }}">
+                                    Edit
+                                </a>
+
+
+                                <form
+                                    method="POST"
+                                    action="/delete/{{ expense[0] }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="delete-button"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+                        </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <p class="no-expenses">
+                        No expenses found for the selected filters.
+                    </p>
+
+                {% endif %}
+
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

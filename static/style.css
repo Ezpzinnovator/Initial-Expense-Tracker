@@ -1,0 +1,396 @@
+/* ==============================
+   Page
+   ============================== */
+
+body {
+    font-family: Arial, sans-serif;
+
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f8fafc,
+        #e0f2fe
+    );
+
+    min-height: 100vh;
+
+    margin: 0;
+
+    padding: 40px;
+
+    color: #222;
+
+    position: relative;
+
+    overflow-x: hidden;
+}
+
+
+/* ==============================
+   Main Container
+   ============================== */
+
+.container {
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+/* ==============================
+   Header
+   ============================== */
+
+header {
+    text-align: center;
+
+    margin-bottom: 40px;
+}
+
+header h1 {
+    color: #2c3e50;
+
+    font-size: 40px;
+
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #64748b;
+
+    font-size: 16px;
+}
+
+
+/* ==============================
+   Dashboard Layout
+   ============================== */
+
+.dashboard {
+    display: grid;
+
+    grid-template-columns: 1fr 1.5fr;
+
+    gap: 30px;
+
+    align-items: start;
+}
+
+
+/* ==============================
+   Cards
+   ============================== */
+
+.card {
+    background: rgba(255, 255, 255, 0.92);
+
+    padding: 30px;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+    backdrop-filter: blur(10px);
+}
+
+.card h2 {
+    color: #2c3e50;
+
+    margin-top: 0;
+
+    margin-bottom: 25px;
+}
+
+
+/* ==============================
+   Form
+   ============================== */
+
+.card form {
+    margin: 0;
+
+    padding: 0;
+
+    background: none;
+
+    box-shadow: none;
+
+    max-width: none;
+}
+
+
+/* ==============================
+   Labels
+   ============================== */
+
+label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-weight: bold;
+
+    color: #374151;
+}
+
+
+/* ==============================
+   Inputs
+   ============================== */
+
+input,
+select {
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    box-sizing: border-box;
+
+    font-size: 14px;
+
+    background-color: white;
+}
+
+
+input:focus,
+select:focus {
+    outline: none;
+
+    border-color: #3498db;
+
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+
+/* ==============================
+   Buttons
+   ============================== */
+
+button {
+    background-color: #3498db;
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+
+button:hover {
+    background-color: #2980b9;
+
+    transform: translateY(-1px);
+}
+
+
+/* ==============================
+   Expense
+   ============================== */
+
+.expense {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background-color: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    padding: 16px;
+
+    margin-bottom: 12px;
+
+    border-radius: 10px;
+}
+
+
+/* Expense information */
+
+.expense-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.expense-info strong {
+    font-size: 16px;
+
+    color: #1f2937;
+}
+
+
+.expense-info span {
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+
+/* Expense amount + button */
+
+.expense-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+
+.expense-actions > strong {
+    color: #16a34a;
+
+    font-size: 16px;
+}
+
+
+/* ==============================
+   Delete Button
+   ============================== */
+
+.delete-button {
+    background-color: #ef4444;
+
+    padding: 8px 12px;
+
+    font-size: 12px;
+}
+
+
+.delete-button:hover {
+    background-color: #dc2626;
+}
+
+
+/* ==============================
+   Decorative Background
+   ============================== */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    width: 300px;
+
+    height: 300px;
+
+    border-radius: 50%;
+
+    background: rgba(52, 152, 219, 0.12);
+
+    top: -100px;
+
+    left: -100px;
+
+    z-index: 0;
+}
+
+
+body::after {
+    content: "";
+
+    position: fixed;
+
+    width: 350px;
+
+    height: 350px;
+
+    border-radius: 50%;
+
+    background: rgba(155, 89, 182, 0.10);
+
+    bottom: -150px;
+
+    right: -100px;
+
+    z-index: 0;
+}
+
+
+/* ==============================
+   Mobile Layout
+   ============================== */
+
+@media (max-width: 800px) {
+
+    body {
+        padding: 20px;
+    }
+
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+
+    header h1 {
+        font-size: 30px;
+    }
+
+
+    .expense {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+
+    .expense-actions {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+}
+.total-card {
+    max-width: 500px;
+    margin: 0 auto 30px auto;
+    padding: 25px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.total-card span {
+    display: block;
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.total-card strong {
+    display: block;
+    color: #16a34a;
+    font-size: 32px;
+}
