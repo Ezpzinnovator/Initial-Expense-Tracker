@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Expense Tracker</title>
 
@@ -15,448 +22,1692 @@
 
 <body>
 
-    <div class="container">
+
+<div class="container">
 
 
-        <!-- Header -->
+    <!-- ================================= -->
+    <!-- HEADER -->
+    <!-- ================================= -->
 
-        <header>
+    <header>
 
-            <h1>💰 Expense Tracker</h1>
+        <h1>
+            <span class="title-icon">₹</span>
+            Expense Tracker
+        </h1>
 
-            <p>
-                Track and manage your daily expenses
+        <p>
+            Track and manage your expenses
+        </p>
+
+    </header>
+
+
+
+    <!-- ================================= -->
+    <!-- SUMMARY -->
+    <!-- ================================= -->
+
+    <section class="dashboard-summary">
+
+
+        <div class="summary-card">
+
+            <span>
+                Total Expenses
+            </span>
+
+            <strong>
+                ₹{{ "{:,.2f}".format(total_expenses) }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>
+                Categories
+            </span>
+
+            <strong>
+                {{ category_totals|length }}
+            </strong>
+
+        </div>
+
+
+    </section>
+
+<!-- ================================= -->
+<!-- SPENDING INSIGHTS -->
+<!-- ================================= -->
+
+<section class="insights-grid">
+
+
+    <!-- HIGHEST CATEGORY -->
+
+    <div class="insight-card">
+
+        <div class="insight-icon">
+            🔥
+        </div>
+
+        <div class="insight-content">
+
+            <span class="insight-label">
+                Highest Category
+            </span>
+
+            <strong>
+                {% if highest_category %}
+                    {{ highest_category }}
+                {% else %}
+                    No data
+                {% endif %}
+            </strong>
+
+            <small>
+                {% if highest_category_amount %}
+                    ₹{{ "{:,.2f}".format(highest_category_amount) }}
+                {% else %}
+                    ₹0.00
+                {% endif %}
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- HIGHEST DAY -->
+
+    <div class="insight-card">
+
+        <div class="insight-icon">
+            📅
+        </div>
+
+        <div class="insight-content">
+
+            <span class="insight-label">
+                Highest Spending Day
+            </span>
+
+            <strong>
+                {% if highest_spending_day %}
+                    {{ highest_spending_day }}
+                {% else %}
+                    No data
+                {% endif %}
+            </strong>
+
+            <small>
+                {% if highest_spending_day_amount %}
+                    ₹{{ "{:,.2f}".format(highest_spending_day_amount) }}
+                {% else %}
+                    ₹0.00
+                {% endif %}
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- AVERAGE DAILY -->
+
+    <div class="insight-card">
+
+        <div class="insight-icon">
+            📊
+        </div>
+
+        <div class="insight-content">
+
+            <span class="insight-label">
+                Average Daily Spending
+            </span>
+
+            <strong>
+                ₹{{ "{:,.2f}".format(average_daily_spending) }}
+            </strong>
+
+            <small>
+                Based on recorded spending days
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TOTAL -->
+
+    <div class="insight-card">
+
+        <div class="insight-icon">
+            💰
+        </div>
+
+        <div class="insight-content">
+
+            <span class="insight-label">
+                Total Spending
+            </span>
+
+            <strong>
+                ₹{{ "{:,.2f}".format(total_expenses) }}
+            </strong>
+
+            <small>
+                Current selected period
+            </small>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+    <!-- ================================= -->
+    <!-- CATEGORY CHART -->
+    <!-- ================================= -->
+
+    <section class="card chart-card">
+
+        <h2>
+            📊 Spending by Category
+        </h2>
+
+
+        {% if category_totals %}
+
+            <div class="chart-container">
+
+                <canvas id="expenseChart"></canvas>
+
+            </div>
+
+        {% else %}
+
+            <p class="no-expenses">
+                No expense data available.
             </p>
 
-        </header>
+        {% endif %}
+
+    </section>
 
 
-        <!-- Dashboard -->
 
-        <section class="dashboard-summary">
+    <!-- ================================= -->
+    <!-- SPENDING OVER TIME -->
+    <!-- ================================= -->
 
-            <div class="summary-card">
+    <section class="card chart-card">
 
-                <span>Total Expenses</span>
 
-                <strong>
-                    ₹{{ total_expenses }}
-                </strong>
+        <div class="chart-header">
+
+
+            <div>
+
+                <h2>
+                    📈 Spending Over Time
+                </h2>
+
+                <p class="chart-subtitle">
+                    Track how your spending changes over time
+                </p>
 
             </div>
 
 
-            <div class="summary-card">
+            <div class="chart-periods">
 
-                <span>Categories</span>
 
-                <strong>
-                    {{ category_totals|length }}
-                </strong>
+                <button
+                    type="button"
+                    class="period-button active"
+                    data-period="7"
+                >
+                    7D
+                </button>
+
+
+                <button
+                    type="button"
+                    class="period-button"
+                    data-period="30"
+                >
+                    30D
+                </button>
+
+
+                <button
+                    type="button"
+                    class="period-button"
+                    data-period="90"
+                >
+                    90D
+                </button>
+
+
+                <button
+                    type="button"
+                    class="period-button"
+                    data-period="180"
+                >
+                    6M
+                </button>
+
+
+                <button
+                    type="button"
+                    class="period-button"
+                    data-period="365"
+                >
+                    1Y
+                </button>
+
+
+                <button
+                    type="button"
+                    class="period-button"
+                    data-period="all"
+                >
+                    ALL
+                </button>
+
 
             </div>
 
-        </section>
+
+        </div>
 
 
-        <!-- Category Breakdown -->
+        {% if daily_totals %}
+
+            <div class="chart-container">
+
+                <canvas id="dailyExpenseChart"></canvas>
+
+            </div>
+
+        {% else %}
+
+            <p class="no-expenses">
+                No spending data available.
+            </p>
+
+        {% endif %}
+
+
+    </section>
+
+
+
+    <!-- ================================= -->
+    <!-- FILTERS -->
+    <!-- ================================= -->
+
+    <section class="card filter-card">
+
+
+        <h2>
+            🔎 Filter Expenses
+        </h2>
+
+
+        <form
+            method="GET"
+            action="/"
+        >
+
+
+            <div class="filter-fields">
+
+
+                <div>
+
+                    <label for="from_date">
+                        From
+                    </label>
+
+                    <input
+                        type="date"
+                        id="from_date"
+                        name="from_date"
+                        value="{{ from_date }}"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label for="to_date">
+                        To
+                    </label>
+
+                    <input
+                        type="date"
+                        id="to_date"
+                        name="to_date"
+                        value="{{ to_date }}"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <label for="category_filter">
+                Category
+            </label>
+
+
+            <select
+                id="category_filter"
+                name="category_filter"
+            >
+
+
+                <option value="">
+                    All Categories
+                </option>
+
+
+                <option
+                    value="Food"
+                    {% if category_filter == "Food" %}
+                    selected
+                    {% endif %}
+                >
+                    Food
+                </option>
+
+
+                <option
+                    value="Transport"
+                    {% if category_filter == "Transport" %}
+                    selected
+                    {% endif %}
+                >
+                    Transport
+                </option>
+
+
+                <option
+                    value="Shopping"
+                    {% if category_filter == "Shopping" %}
+                    selected
+                    {% endif %}
+                >
+                    Shopping
+                </option>
+
+
+                <option
+                    value="Entertainment"
+                    {% if category_filter == "Entertainment" %}
+                    selected
+                    {% endif %}
+                >
+                    Entertainment
+                </option>
+
+
+                <option
+                    value="Health"
+                    {% if category_filter == "Health" %}
+                    selected
+                    {% endif %}
+                >
+                    Health
+                </option>
+
+
+                <option
+                    value="Education"
+                    {% if category_filter == "Education" %}
+                    selected
+                    {% endif %}
+                >
+                    Education
+                </option>
+
+
+                <option
+                    value="Travel"
+                    {% if category_filter == "Travel" %}
+                    selected
+                    {% endif %}
+                >
+                    Travel
+                </option>
+
+
+                <option
+                    value="Utilities"
+                    {% if category_filter == "Utilities" %}
+                    selected
+                    {% endif %}
+                >
+                    Utilities
+                </option>
+
+
+                <option
+                    value="Bills"
+                    {% if category_filter == "Bills" %}
+                    selected
+                    {% endif %}
+                >
+                    Bills
+                </option>
+
+
+                <option
+                    value="Other"
+                    {% if category_filter == "Other" %}
+                    selected
+                    {% endif %}
+                >
+                    Other
+                </option>
+
+
+            </select>
+
+
+            <br>
+
+
+            <button type="submit">
+                Apply Filter
+            </button>
+
+
+            <a
+                href="/"
+                class="clear-button"
+            >
+                Clear
+            </a>
+
+
+        </form>
+
+
+    </section>
+
+
+
+    <!-- ================================= -->
+    <!-- MAIN DASHBOARD -->
+    <!-- ================================= -->
+
+    <main class="dashboard">
+
+
+        <!-- ================================= -->
+        <!-- ADD EXPENSE -->
+        <!-- ================================= -->
 
         <section class="card">
 
+
             <h2>
-                📊 Spending by Category
+                ➕ Add Expense
             </h2>
 
 
-            {% if category_totals %}
-
-                <div class="category-list">
-
-                    {% for category in category_totals %}
-
-                        <div class="category-row">
-
-                            <span>
-                                {{ category[0] }}
-                            </span>
-
-                            <strong>
-                                ₹{{ category[1] }}
-                            </strong>
-
-                        </div>
-
-                    {% endfor %}
-
-                </div>
-
-            {% else %}
-
-                <p>
-                    No expense data available.
-                </p>
-
-            {% endif %}
-
-        </section>
+            <form method="POST">
 
 
-        <!-- Filter Expenses -->
-
-        <section class="card filter-card">
-
-            <h2>
-                🔎 Filter Expenses
-            </h2>
+                <label for="description">
+                    Description
+                </label>
 
 
-            <form method="GET" action="/">
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    placeholder="Example: Lunch"
+                    required
+                >
 
 
-                <div class="filter-fields">
+                <label for="amount">
+                    Amount
+                </label>
 
 
-                    <div>
-
-                        <label for="from_date">
-                            From
-                        </label>
-
-                        <input
-                            type="date"
-                            id="from_date"
-                            name="from_date"
-                            value="{{ from_date }}"
-                        >
-
-                    </div>
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    placeholder="Example: 250"
+                    min="0.01"
+                    max="100000000"
+                    step="0.01"
+                    required
+                >
 
 
-                    <div>
-
-                        <label for="to_date">
-                            To
-                        </label>
-
-                        <input
-                            type="date"
-                            id="to_date"
-                            name="to_date"
-                            value="{{ to_date }}"
-                        >
-
-                    </div>
-
-
-                </div>
-
-
-                <label for="category_filter">
+                <label for="category">
                     Category
                 </label>
 
+
                 <select
-                    id="category_filter"
-                    name="category_filter"
+                    id="category"
+                    name="category"
+                    required
                 >
 
-                    <option value="">
-                        All Categories
-                    </option>
-
-                    <option
-                        value="Food"
-                        {% if category_filter == "Food" %}selected{% endif %}
-                    >
+                    <option value="Food">
                         Food
                     </option>
 
-                    <option
-                        value="Transport"
-                        {% if category_filter == "Transport" %}selected{% endif %}
-                    >
+                    <option value="Transport">
                         Transport
                     </option>
 
-                    <option
-                        value="Shopping"
-                        {% if category_filter == "Shopping" %}selected{% endif %}
-                    >
+                    <option value="Shopping">
                         Shopping
                     </option>
 
-                    <option
-                        value="Entertainment"
-                        {% if category_filter == "Entertainment" %}selected{% endif %}
-                    >
+                    <option value="Entertainment">
                         Entertainment
                     </option>
 
-                    <option
-                        value="Health"
-                        {% if category_filter == "Health" %}selected{% endif %}
-                    >
+                    <option value="Health">
                         Health
                     </option>
 
-                    <option
-                        value="Education"
-                        {% if category_filter == "Education" %}selected{% endif %}
-                    >
+                    <option value="Education">
                         Education
                     </option>
 
-                    <option
-                        value="Travel"
-                        {% if category_filter == "Travel" %}selected{% endif %}
-                    >
+                    <option value="Travel">
                         Travel
                     </option>
 
-                    <option
-                        value="Utilities"
-                        {% if category_filter == "Utilities" %}selected{% endif %}
-                    >
+                    <option value="Utilities">
                         Utilities
                     </option>
 
-                    <option
-                        value="Bills"
-                        {% if category_filter == "Bills" %}selected{% endif %}
-                    >
+                    <option value="Bills">
                         Bills
                     </option>
 
-                    <option
-                        value="Other"
-                        {% if category_filter == "Other" %}selected{% endif %}
-                    >
+                    <option value="Other">
                         Other
                     </option>
 
                 </select>
 
 
-                <br>
+                <label for="expense_date">
+                    Date
+                </label>
+
+
+                <input
+                    type="date"
+                    id="expense_date"
+                    name="expense_date"
+                    required
+                >
 
 
                 <button type="submit">
-                    Apply Filter
+                    Add Expense
                 </button>
-
-
-                <a href="/" class="clear-button">
-                    Clear
-                </a>
 
 
             </form>
 
+
         </section>
 
 
-        <!-- Main Content -->
 
-        <main class="dashboard">
+        <!-- ================================= -->
+        <!-- EXPENSE LIST -->
+        <!-- ================================= -->
 
-
-            <!-- Add Expense -->
-
-            <section class="card">
-
-                <h2>
-                    ➕ Add Expense
-                </h2>
+        <section class="card">
 
 
-                <form method="POST">
+            <h2>
+                📋 Recent Expenses
+            </h2>
 
 
-                    <label for="description">
-                        Description
-                    </label>
-
-                    <input
-                        type="text"
-                        id="description"
-                        name="description"
-                        placeholder="Example: Lunch"
-                        required
-                    >
+            {% if expenses %}
 
 
-                    <label for="amount">
-                        Amount
-                    </label>
-
-                    <input
-                        type="number"
-                        id="amount"
-                        name="amount"
-                        placeholder="Example: 250"
-                        min="0.01"
-                        max="100000000"
-                        step="0.01"
-                        required
-                    >
+                {% for expense in expenses %}
 
 
-                    <label for="category">
-                        Category
-                    </label>
-
-                    <select
-                        id="category"
-                        name="category"
-                        required
-                    >
-
-                        <option value="Food">
-                            Food
-                        </option>
-
-                        <option value="Transport">
-                            Transport
-                        </option>
-
-                        <option value="Shopping">
-                            Shopping
-                        </option>
-
-                        <option value="Entertainment">
-                            Entertainment
-                        </option>
-
-                        <option value="Health">
-                            Health
-                        </option>
-
-                        <option value="Education">
-                            Education
-                        </option>
-
-                        <option value="Travel">
-                            Travel
-                        </option>
-
-                        <option value="Utilities">
-                            Utilities
-                        </option>
-
-                        <option value="Bills">
-                            Bills
-                        </option>
-
-                        <option value="Other">
-                            Other
-                        </option>
-
-                    </select>
+                    <div class="expense">
 
 
-                    <label for="expense_date">
-                        Date
-                    </label>
+                        <div class="expense-info">
 
-                    <input
-                        type="date"
-                        id="expense_date"
-                        name="expense_date"
-                        required
-                    >
+                            <strong>
+                                {{ expense[1] }}
+                            </strong>
 
+                            <span>
+                                {{ expense[3] }}
+                            </span>
 
-                    <button type="submit">
-                        Add Expense
-                    </button>
+                            <span>
+                                📅 {{ expense[4] }}
+                            </span>
 
-                </form>
-
-            </section>
+                        </div>
 
 
-            <!-- Recent Expenses -->
+                        <div class="expense-actions">
 
-            <section class="card">
-
-                <h2>
-                    📋 Recent Expenses
-                </h2>
+                            <strong>
+                                ₹{{ "{:,.2f}".format(expense[2]) }}
+                            </strong>
 
 
-                {% if expenses %}
-
-                    {% for expense in expenses %}
-
-                        <div class="expense">
-
-
-                            <div class="expense-info">
-
-                                <strong>
-                                    {{ expense[1] }}
-                                </strong>
-
-                                <span>
-                                    {{ expense[3] }}
-                                </span>
-
-                                <span>
-                                    📅 {{ expense[4] }}
-                                </span>
-
-                            </div>
+                            <a
+                                href="/edit/{{ expense[0] }}"
+                            >
+                                Edit
+                            </a>
 
 
-                            <div class="expense-actions">
+                            <form
+                                method="POST"
+                                action="/delete/{{ expense[0] }}"
+                            >
 
-                                <strong>
-                                    ₹{{ expense[2] }}
-                                </strong>
-
-
-                                <a href="/edit/{{ expense[0] }}">
-                                    Edit
-                                </a>
-
-
-                                <form
-                                    method="POST"
-                                    action="/delete/{{ expense[0] }}"
+                                <button
+                                    type="submit"
+                                    class="delete-button"
                                 >
+                                    Delete
+                                </button>
 
-                                    <button
-                                        type="submit"
-                                        class="delete-button"
-                                    >
-                                        Delete
-                                    </button>
-
-                                </form>
-
-                            </div>
+                            </form>
 
 
                         </div>
 
-                    {% endfor %}
+
+                    </div>
 
 
-                {% else %}
-
-                    <p class="no-expenses">
-                        No expenses found for the selected filters.
-                    </p>
-
-                {% endif %}
+                {% endfor %}
 
 
-            </section>
+            {% else %}
+
+                <p class="no-expenses">
+                    No expenses found.
+                </p>
+
+            {% endif %}
 
 
-        </main>
+        </section>
 
-    </div>
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ================================= -->
+<!-- CHART.JS -->
+<!-- ================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+
+
+/* =========================================
+   FUTURISTIC CHART COLORS
+   ========================================= */
+
+const chartColors = {
+
+    primary: "#67e8f9",
+
+    secondary: "#818cf8",
+
+    text: "#cbd5e1",
+
+    grid: "rgba(148, 163, 184, 0.08)"
+
+};
+
+
+
+/* =========================================
+   CATEGORY CHART DATA
+   ========================================= */
+
+const categoryData = [
+
+    {% for category in category_totals %}
+
+    {
+        category: {{ category[0]|tojson }},
+        amount: {{ category[1] }}
+    }
+
+    {% if not loop.last %},{% endif %}
+
+    {% endfor %}
+
+];
+
+
+
+/* =========================================
+   CATEGORY CHART
+   ========================================= */
+
+const categoryCanvas =
+    document.getElementById(
+        "expenseChart"
+    );
+
+
+if (
+    categoryCanvas &&
+    categoryData.length
+) {
+
+
+    new Chart(
+
+        categoryCanvas,
+
+        {
+
+            type: "bar",
+
+
+            data: {
+
+                labels: categoryData.map(
+                    item => item.category
+                ),
+
+
+                datasets: [
+
+                    {
+
+                        label: "Amount Spent",
+
+                        data: categoryData.map(
+                            item => item.amount
+                        ),
+
+                        backgroundColor:
+                            "rgba(103, 232, 249, 0.18)",
+
+                        borderColor:
+                            chartColors.primary,
+
+                        borderWidth: 1,
+
+                        borderRadius: 8,
+
+                        hoverBackgroundColor:
+                            "rgba(103, 232, 249, 0.35)"
+
+                    }
+
+                ]
+
+            },
+
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+
+                animation: {
+
+                    duration: 900,
+
+                    easing: "easeOutQuart"
+
+                },
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    },
+
+
+                    tooltip: {
+
+                        displayColors: false,
+
+                        backgroundColor:
+                            "rgba(10, 15, 30, 0.95)",
+
+                        borderColor:
+                            "rgba(103, 232, 249, 0.3)",
+
+                        borderWidth: 1,
+
+                        titleColor:
+                            chartColors.primary,
+
+                        bodyColor:
+                            chartColors.text,
+
+                        padding: 12,
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return "₹" +
+                                    Number(
+                                        context.parsed.y
+                                    ).toLocaleString(
+                                        "en-IN",
+                                        {
+                                            minimumFractionDigits: 2
+                                        }
+                                    );
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        grid: {
+
+                            display: false
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                chartColors.text
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        beginAtZero: true,
+
+
+                        grid: {
+
+                            color:
+                                chartColors.grid
+
+                        },
+
+
+                        ticks: {
+
+                            color:
+                                chartColors.text,
+
+
+                            callback: function(value) {
+
+                                return "₹" +
+                                    Number(value)
+                                    .toLocaleString(
+                                        "en-IN"
+                                    );
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+}
+
+
+
+/* =========================================
+   RAW DAILY DATA
+   ========================================= */
+
+const rawDailyData = [
+
+    {% for day in daily_totals %}
+
+    {
+        date: {{ day[0]|tojson }},
+        amount: {{ day[1] }}
+    }
+
+    {% if not loop.last %},{% endif %}
+
+    {% endfor %}
+
+];
+
+
+
+/* =========================================
+   NORMALIZE DATE
+   ========================================= */
+
+function normalizeDate(date) {
+
+    const result =
+        new Date(date);
+
+    result.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+    return result;
+
+}
+
+
+
+/* =========================================
+   FORMAT DATE
+   ========================================= */
+
+function formatDate(date) {
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+
+/* =========================================
+   CREATE CONTINUOUS DATA
+   ========================================= */
+
+function createContinuousData(data) {
+
+
+    if (!data.length) {
+
+        return [];
+
+    }
+
+
+    const amounts = {};
+
+
+    data.forEach(
+
+        function(item) {
+
+            amounts[item.date] =
+                Number(item.amount);
+
+        }
+
+    );
+
+
+    const sortedDates =
+        data
+            .map(
+                item =>
+                    normalizeDate(
+                        item.date
+                    )
+            )
+            .sort(
+                (a, b) =>
+                    a - b
+            );
+
+
+    const startDate =
+        sortedDates[0];
+
+
+    const endDate =
+        sortedDates[
+            sortedDates.length - 1
+        ];
+
+
+    const result = [];
+
+
+    const currentDate =
+        new Date(startDate);
+
+
+    while (
+        currentDate <= endDate
+    ) {
+
+
+        const formattedDate =
+            formatDate(
+                currentDate
+            );
+
+
+        result.push({
+
+            date:
+                formattedDate,
+
+            amount:
+                amounts[
+                    formattedDate
+                ] || 0
+
+        });
+
+
+        currentDate.setDate(
+            currentDate.getDate() + 1
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+
+const dailyData =
+    createContinuousData(
+        rawDailyData
+    );
+
+
+
+/* =========================================
+   DAILY CHART
+   ========================================= */
+
+const dailyCanvas =
+    document.getElementById(
+        "dailyExpenseChart"
+    );
+
+
+let dailyExpenseChart = null;
+
+
+
+/* =========================================
+   CREATE GRADIENT
+   ========================================= */
+
+function createChartGradient(
+    canvas
+) {
+
+
+    const context =
+        canvas
+            .getContext("2d");
+
+
+    const gradient =
+        context.createLinearGradient(
+            0,
+            0,
+            0,
+            350
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "rgba(103, 232, 249, 0.25)"
+    );
+
+
+    gradient.addColorStop(
+        1,
+        "rgba(103, 232, 249, 0)"
+    );
+
+
+    return gradient;
+
+}
+
+
+
+if (
+    dailyCanvas &&
+    dailyData.length
+) {
+
+
+    const gradient =
+        createChartGradient(
+            dailyCanvas
+        );
+
+
+    dailyExpenseChart =
+        new Chart(
+
+            dailyCanvas,
+
+            {
+
+                type: "line",
+
+
+                data: {
+
+                    labels:
+                        dailyData.map(
+                            item =>
+                                item.date
+                        ),
+
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Daily Spending",
+
+                            data:
+                                dailyData.map(
+                                    item =>
+                                        item.amount
+                                ),
+
+                            borderColor:
+                                chartColors.primary,
+
+                            backgroundColor:
+                                gradient,
+
+                            borderWidth: 3,
+
+                            tension: 0.4,
+
+                            fill: true,
+
+                            pointRadius: 3,
+
+                            pointBackgroundColor:
+                                chartColors.primary,
+
+                            pointBorderColor:
+                                "#0f172a",
+
+                            pointBorderWidth: 2,
+
+                            pointHoverRadius: 7,
+
+                            pointHoverBackgroundColor:
+                                "#ffffff",
+
+                            pointHoverBorderColor:
+                                chartColors.primary,
+
+                            pointHoverBorderWidth: 3
+
+                        }
+
+                    ]
+
+                },
+
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+
+                    animation: {
+
+                        duration: 700,
+
+                        easing:
+                            "easeOutQuart"
+
+                    },
+
+
+                    interaction: {
+
+                        intersect: false,
+
+                        mode: "index"
+
+                    },
+
+
+                    plugins: {
+
+                        legend: {
+
+                            display: false
+
+                        },
+
+
+                        tooltip: {
+
+                            displayColors: false,
+
+                            backgroundColor:
+                                "rgba(8, 12, 24, 0.96)",
+
+                            borderColor:
+                                "rgba(103, 232, 249, 0.4)",
+
+                            borderWidth: 1,
+
+                            titleColor:
+                                chartColors.primary,
+
+                            bodyColor:
+                                "#ffffff",
+
+                            padding: 14,
+
+                            cornerRadius: 10,
+
+
+                            callbacks: {
+
+                                title:
+                                    function(context) {
+
+                                        if (
+                                            !context.length
+                                        ) {
+
+                                            return "";
+
+                                        }
+
+
+                                        const date =
+                                            new Date(
+                                                context[0]
+                                                    .label
+                                            );
+
+
+                                        return date.toLocaleDateString(
+                                            "en-IN",
+                                            {
+                                                day:
+                                                    "2-digit",
+
+                                                month:
+                                                    "short",
+
+                                                year:
+                                                    "numeric"
+                                            }
+                                        );
+
+                                    },
+
+
+                                label:
+                                    function(context) {
+
+                                        return "  ₹" +
+                                            Number(
+                                                context.parsed.y
+                                            ).toLocaleString(
+                                                "en-IN",
+                                                {
+                                                    minimumFractionDigits:
+                                                        2
+                                                }
+                                            );
+
+                                    }
+
+                            }
+
+                        }
+
+                    },
+
+
+                    scales: {
+
+                        x: {
+
+                            grid: {
+
+                                display: false
+
+                            },
+
+
+                            ticks: {
+
+                                color:
+                                    chartColors.text,
+
+                                maxTicksLimit:
+                                    8
+
+                            }
+
+                        },
+
+
+                        y: {
+
+                            beginAtZero: true,
+
+
+                            grid: {
+
+                                color:
+                                    chartColors.grid,
+
+                                drawBorder:
+                                    false
+
+                            },
+
+
+                            ticks: {
+
+                                color:
+                                    chartColors.text,
+
+
+                                callback:
+                                    function(value) {
+
+                                        return "₹" +
+                                            Number(value)
+                                            .toLocaleString(
+                                                "en-IN"
+                                            );
+
+                                    }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+
+
+
+/* =========================================
+   PERIOD BUTTONS
+   ========================================= */
+
+const periodButtons =
+    document.querySelectorAll(
+        ".period-button"
+    );
+
+
+periodButtons.forEach(
+
+    function(button) {
+
+
+        button.addEventListener(
+
+            "click",
+
+            function() {
+
+
+                periodButtons.forEach(
+
+                    function(item) {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+
+                );
+
+
+                button.classList.add(
+                    "active"
+                );
+
+
+                const period =
+                    button.dataset.period;
+
+
+                if (
+                    period === "all"
+                ) {
+
+                    updateDailyChart(
+                        dailyData
+                    );
+
+                    return;
+
+                }
+
+
+                const numberOfDays =
+                    parseInt(
+                        period
+                    );
+
+
+                const today =
+                    new Date();
+
+
+                today.setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                );
+
+
+                const cutoffDate =
+                    new Date(
+                        today
+                    );
+
+
+                cutoffDate.setDate(
+                    today.getDate()
+                    -
+                    numberOfDays
+                    +
+                    1
+                );
+
+
+                const filteredData =
+                    dailyData.filter(
+
+                        function(item) {
+
+                            const itemDate =
+                                normalizeDate(
+                                    item.date
+                                );
+
+
+                            return (
+                                itemDate >=
+                                cutoffDate
+                            );
+
+                        }
+
+                    );
+
+
+                updateDailyChart(
+                    filteredData
+                );
+
+            }
+
+        );
+
+    }
+
+);
+
+
+
+/* =========================================
+   UPDATE DAILY CHART
+   ========================================= */
+
+function updateDailyChart(
+    data
+) {
+
+
+    if (
+        !dailyExpenseChart
+    ) {
+
+        return;
+
+    }
+
+
+    dailyExpenseChart.data.labels =
+        data.map(
+
+            function(item) {
+
+                return item.date;
+
+            }
+
+        );
+
+
+    dailyExpenseChart.data.datasets[0].data =
+        data.map(
+
+            function(item) {
+
+                return item.amount;
+
+            }
+
+        );
+
+
+    dailyExpenseChart.update();
+
+}
+
+
+</script>
+
 
 </body>
 
